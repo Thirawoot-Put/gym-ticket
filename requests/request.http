@@ -1,6 +1,14 @@
-@url = http://localhost:9090
+@url = http://localhost:9091
 
 # @name Health-check
 GET {{url}}/health-check
 accept: application/json
 content-type: application/json
+
+### END
+
+# @name test-redis
+GET {{url}}/test-redis
+accept: application/json
+content-type: application/json
+
