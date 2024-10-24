@@ -11,7 +11,7 @@
     "start": "npm-run-all clean build run-server --print-label",
     "start:local": "NODE_ENV=local npm start",
     "dev": "NODE_ENV=local nodemon --exec ts-node -r tsconfig-paths/register src/index.ts",
-    "db:up": "docker compose -f ./docker/docker-compose.local.yml up -d"
+    "db:up": "docker compose -f ./docker/docker-compose.yml up -d"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.583.0",
