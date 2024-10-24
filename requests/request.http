@@ -1,0 +1,6 @@
+@url = http://localhost:9090
+
+# @name Health-check
+GET {{url}}/health-check
+accept: application/json
+content-type: application/json
