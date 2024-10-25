@@ -3,13 +3,14 @@ import 'reflect-metadata';
 
 import express from 'express';
 
-import errorHandler from './middlewares/error';
+import ErrorHandler from '@/middlewares/error';
 
 import { NODE_ENV } from '@/config/env';
 
-import notFound from './middlewares/notFound';
+import testRoute from '@/route/testRoute'
+import StatusCodes from '@/utils/statusCode';
 
-import StatusCodes from './utils/statusCode';
+import { CustomError } from '@/middlewares/error'
 
 const app = express();
 
@@ -19,7 +20,16 @@ app.get(`/health-check`, (_req, res) => {
   });
 });
 
-app.use(notFound);
-app.use(errorHandler);
+app.use(`/test`, testRoute)
+app.use(`/error`, (req, res, next) => {
+  try {
+    throw new CustomError('test error with custom error', 200)
+  } catch (err) {
+    next(err)
+  }
+})
+
+app.use(ErrorHandler.notFound);
+app.use(ErrorHandler.serverError);
 
 export default app;

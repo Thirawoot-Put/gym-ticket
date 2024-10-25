@@ -1,6 +1,8 @@
 import StatusCodes from '@/utils/statusCode';
 import dayjs from 'dayjs';
-import { ErrorRequestHandler } from 'express';
+import { Request, Response, NextFunction } from 'express';
+
+type TAppendError = Error & { user: string, timestamp: string }
 
 export class CustomError extends Error {
   public statusCode: number;
@@ -16,23 +18,29 @@ export class CustomError extends Error {
   }
 }
 
-const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
-  const currentDate = dayjs().format('DD/MM/YYYY');
-  const currentTime = dayjs().format('HH:MM');
-  err.user = res.locals.user_id || null;
-  err.timestamp = `${currentDate}-${currentTime}`;
+class ErrorHandler {
+  static async serverError(err: TAppendError, _req: Request, res: Response, _next: NextFunction) {
+    const currentDate = dayjs().format('DD/MM/YYYY');
+    const currentTime = dayjs().format('HH:MM');
+    err.user = res.locals.user_id || null;
+    err.timestamp = `${currentDate}-${currentTime}`;
 
-  console.error(err);
+    console.error(err);
 
-  if (err instanceof CustomError) {
-    return res
-      .status(err.statusCode)
-      .json({ error: err.message, code: err.customCode || null });
+    if (err instanceof CustomError) {
+      return res
+        .status(err.statusCode)
+        .json({ error: err.message, code: err.customCode || null });
+    }
+
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      error: err.message || 'Internal server error',
+    });
+  };
+
+  static notFound(_req: Request, res: Response) {
+    res.status(StatusCodes.NOT_FOUND).json({ error: "Resource not found" })
   }
+}
 
-  res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-    error: err.message || 'Internal server error',
-  });
-};
-
-export default errorHandler;
+export default ErrorHandler;

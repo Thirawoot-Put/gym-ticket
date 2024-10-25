@@ -7,3 +7,16 @@ content-type: application/json
 
 ### END
 
+# @name check test
+GET {{url}}/test
+accept: application/json
+content-type: application/json
+
+### END
+
+# @name Test error
+GET {{url}}/error
+accept: application/json
+content-type: application/json
+
+### END
