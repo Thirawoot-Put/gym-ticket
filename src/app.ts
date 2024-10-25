@@ -3,7 +3,7 @@ import 'reflect-metadata';
 
 import express from 'express';
 
-import ErrorHandler from '@/middlewares/exception';
+import ExceptionHandler from '@/middlewares/exception';
 
 import { NODE_ENV } from '@/config/env';
 
@@ -29,7 +29,7 @@ app.use(`/error`, (req, res, next) => {
   }
 })
 
-app.use(ErrorHandler.notFound);
-app.use(ErrorHandler.serverError);
+app.use(ExceptionHandler.notFound);
+app.use(ExceptionHandler.serverError);
 
 export default app;

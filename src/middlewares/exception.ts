@@ -18,7 +18,7 @@ export class CustomError extends Error {
   }
 }
 
-class ErrorHandler {
+class ExceptionHandler {
   static async serverError(err: TAppendError, _req: Request, res: Response, _next: NextFunction) {
     const currentDate = dayjs().format('DD/MM/YYYY');
     const currentTime = dayjs().format('HH:MM');
@@ -43,4 +43,4 @@ class ErrorHandler {
   }
 }
 
-export default ErrorHandler;
+export default ExceptionHandler;
