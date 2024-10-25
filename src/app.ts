@@ -3,14 +3,14 @@ import 'reflect-metadata';
 
 import express from 'express';
 
-import ErrorHandler from '@/middlewares/error';
+import ErrorHandler from '@/middlewares/exception';
 
 import { NODE_ENV } from '@/config/env';
 
 import testRoute from '@/route/testRoute'
 import StatusCodes from '@/utils/statusCode';
 
-import { CustomError } from '@/middlewares/error'
+import { CustomError } from '@/middlewares/exception'
 
 const app = express();
 
