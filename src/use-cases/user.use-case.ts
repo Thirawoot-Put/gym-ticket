@@ -31,7 +31,7 @@ export class UserUseCase {
     return mapper.toInstance(UserResponse, newUser)
   }
 
-  async getUserById(id: string) {
+  async findUserById(id: string) {
     validateUser.validateUserId(id)
     return await this.userRepository.findById(id)
   }
@@ -39,13 +39,15 @@ export class UserUseCase {
   async updateUser(user: UserUpdate) {
     const mapUser = mapper.toInstance(UserUpdate, user)
     if (!mapUser.password) throw new Error('UPDATE_DATA_IS_REQUIRED')
+    const updatedUser = await this.userRepository.update(user)
 
-    return await this.userRepository.update(user)
+    return mapper.toInstance(UserResponse, updatedUser)
   }
 
   async deleteUser(id: string) {
     validateUser.validateUserId(id)
+    const deletedUser = await this.userRepository.delete(id)
 
-    return await this.userRepository.delete(id)
+    return mapper.toInstance(UserResponse, deletedUser)
   }
 }

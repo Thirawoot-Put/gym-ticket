@@ -1,6 +1,6 @@
 import { User } from "@/domain/entities/user.entity";
 import { UserRepository } from "@/domain/interfaces/user-repository";
-import { Database } from "../database/interface.database";
+import { Database } from "../database/interface";
 import { UserCreate } from "@/shared/dto/user.dto";
 
 export class redisUserRepository implements UserRepository {

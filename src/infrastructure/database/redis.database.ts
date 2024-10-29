@@ -1,7 +1,7 @@
 import { User } from "@/domain/entities/user.entity";
 import redis from "@/shared/utils/redis";
 import { nanoid } from "nanoid";
-import { Database } from "./interface.database";
+import { Database } from "@/infrastructure/database/interface";
 
 export class RedisDb implements Database {
   async save(userName: string, password: string) {
