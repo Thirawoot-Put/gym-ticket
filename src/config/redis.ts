@@ -2,7 +2,6 @@ import Redis from 'ioredis';
 
 import { REDIS_URL } from '@/config/env';
 
-console.log(REDIS_URL)
 const redis = new Redis(REDIS_URL, {
   lazyConnect: true,
   connectTimeout: 5000,
