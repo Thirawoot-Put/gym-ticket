@@ -3,7 +3,7 @@ import path from 'path';
 
 export const NODE_ENV = process.env.NODE_ENV as string;
 
-dotenv.config({ path: path.resolve(__dirname, `../../.env`) });
+dotenv.config({ path: path.resolve(__dirname, `../../../.env`) });
 
 export const PORT = process.env.PORT || 9090;
 

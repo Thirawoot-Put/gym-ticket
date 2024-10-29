@@ -3,11 +3,11 @@ import 'reflect-metadata';
 
 import express from 'express';
 
-import ExceptionHandler from '@/middlewares/exception';
+import ExceptionHandler from '@/shared/middlewares/exception';
 
-import { NODE_ENV } from '@/config/env';
+import { NODE_ENV } from '@/shared/config/env';
 
-import StatusCodes from '@/utils/statusCode';
+import StatusCodes from '@/shared/utils/statusCode';
 
 const app = express();
 
@@ -16,6 +16,8 @@ app.get(`/health-check`, (_req, res) => {
     mode: NODE_ENV,
   });
 });
+
+
 
 app.use(ExceptionHandler.notFound);
 app.use(ExceptionHandler.serverError);

@@ -1,4 +1,4 @@
-import StatusCodes from '@/utils/statusCode';
+import StatusCodes from '@/shared/utils/statusCode';
 import dayjs from 'dayjs';
 import { Request, Response, NextFunction } from 'express';
 
