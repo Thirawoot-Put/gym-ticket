@@ -1,0 +1,13 @@
+@url = http://localhost:9091
+
+# @name CreateUser
+POST {{url}}/user
+accept: application/json
+content-type: application/json
+
+{
+  userName: 'test',
+  password: '1234'
+}
+
+### END
