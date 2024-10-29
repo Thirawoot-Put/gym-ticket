@@ -1,15 +1,16 @@
 import { User } from "@/domain/entities/user.entity";
 import { UserRepository } from "@/domain/interfaces/user-repository";
-import { RedisDb } from "../database/redis.database";
 import { Database } from "../database/interface.database";
+import { UserCreate } from "@/shared/dto/user.dto";
 
 export class redisUserRepository implements UserRepository {
-  database: Database
+  private database: Database
+
   constructor(database: Database) {
     this.database = database
   }
 
-  async create(user: User): Promise<User> {
+  async create(user: UserCreate): Promise<User> {
     return await this.database.save(user.userName, user.password)
   }
 
