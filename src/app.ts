@@ -3,6 +3,8 @@ import 'reflect-metadata';
 
 import express from 'express';
 
+import userRouter from '@/interface/routes/user.route'
+
 import ExceptionHandler from '@/shared/middlewares/exception';
 
 import { NODE_ENV } from '@/shared/config/env';
@@ -17,7 +19,7 @@ app.get(`/health-check`, (_req, res) => {
   });
 });
 
-
+app.use('/user', userRouter)
 
 app.use(ExceptionHandler.notFound);
 app.use(ExceptionHandler.serverError);

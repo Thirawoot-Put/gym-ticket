@@ -3,7 +3,7 @@ import { UserRepository } from "@/domain/interfaces/user-repository";
 import { Database } from "../database/interface";
 import { UserCreate } from "@/shared/dto/user.dto";
 
-export class redisUserRepository implements UserRepository {
+export class RedisUserRepository implements UserRepository {
   private database: Database
 
   constructor(database: Database) {
