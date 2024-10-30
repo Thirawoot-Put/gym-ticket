@@ -13,6 +13,8 @@ import StatusCodes from '@/shared/utils/statusCode';
 
 const app = express();
 
+app.use(express.json());
+
 app.get(`/health-check`, (_req, res) => {
   res.status(StatusCodes.OK).json({
     mode: NODE_ENV,
