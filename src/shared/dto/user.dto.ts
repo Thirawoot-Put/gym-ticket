@@ -1,14 +1,15 @@
 export class UserCreate {
-  userName: string
-  password: string
+  userName: string = ''
+  password: string = ''
 }
 
 export class UserUpdate {
-  password: string
+  id: string = ''
+  password: string = ''
 }
 
 export class UserResponse {
-  id: string
-  userName: string
+  id: string = ''
+  userName: string = ''
 }
 

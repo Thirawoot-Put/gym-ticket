@@ -9,12 +9,15 @@ export class RedisDb implements Database {
     const user = new User(nanoid(), userName, password)
     await redis.setnx(`user:${user.id}`, JSON.stringify(user))
 
-    return user
+    return await this.findById(user.id)
   }
 
   async delete(id: string) {
-    let foundUser = await this.findById(`user:${id}`)
+    console.log(id)
+    let foundUser = await this.findById(id)
     foundUser._isActive = false
+
+    await redis.set(`user:${foundUser.id}`, JSON.stringify(foundUser))
 
     return foundUser
   }
@@ -29,6 +32,6 @@ export class RedisDb implements Database {
   async update(user: User) {
     await redis.set(`user:${user.id}`, JSON.stringify(user))
 
-    return await this.findById(`user:${user.id}`)
+    return await this.findById(user.id)
   }
 }

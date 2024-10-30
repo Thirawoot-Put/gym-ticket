@@ -10,7 +10,6 @@ export class UserController {
   }
 
   async postNewUser(req: Request, res: Response, next: NextFunction) {
-    console.log(req.body)
     try {
       const user = await this.useCase.createNewUser(req.body)
       res.send(user)
@@ -20,7 +19,6 @@ export class UserController {
   }
 
   async getUserById(req: Request, res: Response, next: NextFunction) {
-    console.log(req.params)
     try {
       const user = await this.useCase.findUserById(req.params.id)
       res.send(user)

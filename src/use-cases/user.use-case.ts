@@ -25,29 +25,36 @@ export class UserUseCase {
 
   async createNewUser(user: UserCreate) {
     validateUser.validateUserData(user)
-    const mapUser = mapper.toInstance(UserCreate, user)
+    const mapUser = mapper.mapObjToCls(UserCreate, user)
     let newUser = await this.userRepository.create(mapUser)
 
-    return mapper.toInstance(UserResponse, newUser)
+    return mapper.mapObjToCls(UserResponse, newUser)
   }
 
   async findUserById(id: string) {
     validateUser.validateUserId(id)
-    return await this.userRepository.findById(id)
+    const foundUser = await this.userRepository.findById(id)
+
+    return mapper.mapObjToCls(UserResponse, foundUser)
   }
 
   async updateUser(user: UserUpdate) {
-    const mapUser = mapper.toInstance(UserUpdate, user)
-    if (!mapUser.password) throw new Error('UPDATE_DATA_IS_REQUIRED')
-    const updatedUser = await this.userRepository.update(user)
+    if (!user.password) throw new Error('UPDATE_DATA_IS_REQUIRED')
 
-    return mapper.toInstance(UserResponse, updatedUser)
+    let targetUser = await this.userRepository.findById(user.id)
+    const mapUpdateUser = mapper.mapObjToCls(UserUpdate, user)
+
+    if (mapUpdateUser.password) targetUser.password = mapUpdateUser.password
+
+    const updatedUser = await this.userRepository.update(targetUser)
+
+    return mapper.mapObjToCls(UserResponse, updatedUser)
   }
 
   async deleteUser(id: string) {
     validateUser.validateUserId(id)
     const deletedUser = await this.userRepository.delete(id)
 
-    return mapper.toInstance(UserResponse, deletedUser)
+    return mapper.mapObjToCls(UserResponse, deletedUser)
   }
 }

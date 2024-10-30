@@ -13,7 +13,7 @@ const userController = new UserController(userUseCase)
 
 router
   .post('/', userController.postNewUser.bind(userController))
-  .patch('/', userController.postNewUser.bind(userController))
+  .patch('/', userController.patchUser.bind(userController))
 router
   .get('/:id', userController.getUserById.bind(userController))
   .delete('/:id', userController.deleteUser.bind(userController))
