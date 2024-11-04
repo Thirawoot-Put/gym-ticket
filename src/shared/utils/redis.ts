@@ -15,6 +15,6 @@ const redis = new Redis(REDIS_URL, {
     console.error(error);
     process.exit(1);
   }
-})();
+});
 
 export default redis;

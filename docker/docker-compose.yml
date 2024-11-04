@@ -1,12 +1,15 @@
 version: "2.1"
 
 services:
-    redis:
-        image: redis:7-alpine
-        container_name: ticket-redis-local
+    mongodb:
+        image: mongo:latest
+        container_name: ticketing-mongodb-local
         restart: always
         ports:
-            - 6381:6379
+            - '27017:27017'
         environment:
             TZ: Asia/Bangkok
-            REDIS_PASSWORD: 1234
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: 1234
+            MONGO_INITDB_DATABASE: ticketing
+
