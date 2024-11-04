@@ -1,11 +1,18 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
-const userSchema = new mongoose.Schema({
-  id: Number,
-  userName: String,
-  password: String,
-  _isActive: Boolean
+interface IUser {
+  id: string
+  userName: string
+  password: string
+  _isActive: boolean
+}
+
+const UserSchema: Schema<IUser> = new mongoose.Schema({
+  id: { type: String, require: true, unique: true },
+  userName: { type: String, require: true },
+  password: { type: String, require: true },
+  _isActive: { type: Boolean, require: true }
 });
 
-const Blog = mongoose.model('Blog', userSchema);
-export default Blog;
+const UserModel = mongoose.model('Blog', UserSchema);
+export default UserModel;
