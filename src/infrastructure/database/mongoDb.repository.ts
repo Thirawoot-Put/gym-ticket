@@ -14,8 +14,16 @@ interface IUser {
 
 
 export class UserMongoDb implements Database {
+  private getUserCollection() {
+    try {
+      return MongoDb.getCollection("user");
+    } catch (error) {
+      throw new Error("Failed to retrieve the user collection.");
+    }
+  }
+
   async save(userName: string, password: string): Promise<User> {
-    const userColl = MongoDb.getCollection("user")
+    const userColl = this.getUserCollection()
     const id = nanoid()
     const userDoc: IUser = { id, userName, password, _isActive: true }
     await userColl.insertOne(userDoc)
@@ -24,7 +32,7 @@ export class UserMongoDb implements Database {
   }
 
   async findById(id: string): Promise<User> {
-    const userColl = MongoDb.getCollection("user")
+    const userColl = this.getUserCollection()
     const user = await userColl.findOne({ id: id })
     if (!user) throw new CustomError("USER_NOT_FOUND", StatusCodes.NOT_FOUND)
 
@@ -37,7 +45,7 @@ export class UserMongoDb implements Database {
   }
 
   async update(user: User): Promise<User> {
-    const userColl = MongoDb.getCollection("user")
+    const userColl = this.getUserCollection()
     await this.findById(user.id)
 
     await userColl.updateOne({ id: user.id }, {
