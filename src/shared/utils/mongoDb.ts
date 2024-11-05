@@ -7,7 +7,7 @@ const client = new MongoClient(MONGO_DB_URI);
 
 class MongoDb {
   static db: Db
-  static clt: { [key: string]: Collection } = {}
+  static coll: { [key: string]: Collection } = {}
 
   static async connect() {
     try {
@@ -22,11 +22,13 @@ class MongoDb {
   }
 
   static initCollection() {
-    this.clt["user"] = this.db.collection('user')
+    this.coll["user"] = this.db.collection('user')
+
+    console.log("Create collection success", this.coll)
   }
 
   static getCollection(cltName: string) {
-    const collection = this.clt[cltName]
+    const collection = this.coll[cltName]
     if (!collection) throw new CustomError("COLLECTION_NOT_FOUND", StatusCodes.NOT_FOUND)
 
     return collection
