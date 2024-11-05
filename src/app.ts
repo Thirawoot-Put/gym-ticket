@@ -10,10 +10,17 @@ import ExceptionHandler from '@/shared/middlewares/exception';
 import { NODE_ENV } from '@/shared/config/env';
 
 import StatusCodes from '@/shared/utils/statusCode';
+import MongoDb from './shared/utils/mongoDb';
+
 
 const app = express();
 
 app.use(express.json());
+
+// connect MongoDb
+(async () => {
+  await MongoDb.connect()
+})()
 
 app.get(`/health-check`, (_req, res) => {
   res.status(StatusCodes.OK).json({
