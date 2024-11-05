@@ -1,5 +1,5 @@
 @url = http://localhost:9091
-@userId = 1utPCfNf_EMVy3LukIKei
+@userId = Cj7R-WiAarxuigrNon8vs
 
 # @name CreateUser
 POST {{url}}/user
@@ -26,7 +26,7 @@ accept: application/json
 content-type: application/json
 
 {
-  "id": "1utPCfNf_EMVy3LukIKei",
+  "id": "Cj7R-WiAarxuigrNon8vs",
   "password": "12345"
 }
 

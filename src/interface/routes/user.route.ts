@@ -1,13 +1,15 @@
-import { RedisDb } from "@/infrastructure/database/redis.database";
+//import { RedisDb } from "@/infrastructure/database/redis.database";
 import { RedisUserRepository } from "@/infrastructure/repositories/user.repository";
 import { UserUseCase } from "@/use-cases/user.use-case";
 import { Router } from "express";
 import { UserController } from "../controllers/user.controller";
+import { UserMongoDb } from "@/infrastructure/database/mongoDb.repository";
 
 const router = Router()
 
-const redisDb = new RedisDb()
-const userRepository = new RedisUserRepository(redisDb)
+//const redisDb = new RedisDb()
+const userMongDb = new UserMongoDb()
+const userRepository = new RedisUserRepository(userMongDb)
 const userUseCase = new UserUseCase(userRepository)
 const userController = new UserController(userUseCase)
 

@@ -1,7 +1,5 @@
 import { MONGO_DB_URI } from "@/shared/config/env";
 import { Collection, Db, MongoClient } from "mongodb";
-import { CustomError } from "../middlewares/exception";
-import StatusCodes from "./statusCode";
 
 const client = new MongoClient(MONGO_DB_URI);
 
@@ -15,26 +13,28 @@ class MongoDb {
       console.log("Connect MongoDB success")
 
       this.db = client.db('ticketing')
-      this.initCollection()
+      await this.initCollection()
     } catch (e: any) {
       console.error(e)
     }
   }
 
-  static initCollection() {
-    this.coll["user"] = this.db.collection('user')
+  static async initCollection() {
+    await this.db.createCollection("user")
+    this.coll["user"] = this.db.collection("user")
 
-    console.log("Create collection success", this.coll)
+    console.log("Create collection success:", Object.keys(this.coll))
   }
 
-  static getCollection(cltName: string) {
-    const collection = this.coll[cltName]
-    if (!collection) throw new CustomError("COLLECTION_NOT_FOUND", StatusCodes.NOT_FOUND)
-
-    return collection
+  static getCollection(collName: string) {
+    const collection = this.coll[collName];
+    if (!collection) {
+      throw new Error(`Collection ${collName} is not initialized`);
+    }
+    return collection;
   }
 
-  static async GetClient() {
+  static async getClient() {
     return client
   }
 

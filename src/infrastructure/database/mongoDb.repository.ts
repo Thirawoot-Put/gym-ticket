@@ -12,10 +12,10 @@ interface IUser {
   _isActive: boolean
 }
 
-const userColl = MongoDb.getCollection("user")
 
 export class UserMongoDb implements Database {
   async save(userName: string, password: string): Promise<User> {
+    const userColl = MongoDb.getCollection("user")
     const id = nanoid()
     const userDoc: IUser = { id, userName, password, _isActive: true }
     await userColl.insertOne(userDoc)
@@ -24,6 +24,7 @@ export class UserMongoDb implements Database {
   }
 
   async findById(id: string): Promise<User> {
+    const userColl = MongoDb.getCollection("user")
     const user = await userColl.findOne({ id: id })
     if (!user) throw new CustomError("USER_NOT_FOUND", StatusCodes.NOT_FOUND)
 
@@ -36,6 +37,7 @@ export class UserMongoDb implements Database {
   }
 
   async update(user: User): Promise<User> {
+    const userColl = MongoDb.getCollection("user")
     await this.findById(user.id)
 
     await userColl.updateOne({ id: user.id }, {

@@ -17,20 +17,25 @@ const app = express();
 
 app.use(express.json());
 
-// connect MongoDb
-(async () => {
-  await MongoDb.connect()
-})()
+async function startServer() {
+  try {
+    await MongoDb.connect()
 
-app.get(`/health-check`, (_req, res) => {
-  res.status(StatusCodes.OK).json({
-    mode: NODE_ENV,
-  });
-});
+    app.get(`/health-check`, (_req, res) => {
+      res.status(StatusCodes.OK).json({
+        mode: NODE_ENV,
+      });
+    });
 
-app.use('/user', userRouter)
+    app.use('/user', userRouter)
 
-app.use(ExceptionHandler.notFound);
-app.use(ExceptionHandler.serverError);
+    app.use(ExceptionHandler.notFound);
+    app.use(ExceptionHandler.serverError);
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+startServer()
 
 export default app;
