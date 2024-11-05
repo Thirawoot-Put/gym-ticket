@@ -10,3 +10,5 @@ export const PORT = process.env.PORT || 9090;
 export const REDIS_URL = process.env.REDIS_URL as string;
 
 export const MONGO_DB_URI = process.env.MONGO_DB_URI as string
+
+export const LOG_LEVEL = process.env.LOG_LEVEL as string
