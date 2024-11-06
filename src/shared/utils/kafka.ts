@@ -1,9 +1,10 @@
 import { Kafka, KafkaMessage } from "kafkajs";
 import { KAFKA_CLIENT_ID } from "../config/env";
+import { IMsgConsumer, IMsgProducer } from "@/infrastructure/msg-brokers/interface";
 
 
 // kafka class with static method for connect kafka client
-class KafkaProducer {
+export class KafkaProducer implements IMsgProducer {
   private kafka = new Kafka({
     clientId: KAFKA_CLIENT_ID,
     brokers: ['localhost:9192', 'localhost:9193']
@@ -41,7 +42,7 @@ class KafkaProducer {
   }
 }
 
-class KafkaConsumer {
+export class KafkaConsumer implements IMsgConsumer {
   private kafka = new Kafka({
     clientId: KAFKA_CLIENT_ID,
     brokers: ['localhost:9192', 'localhost:9193']
@@ -63,17 +64,17 @@ class KafkaConsumer {
     console.info(`Consumer subscribe ${topic}`)
   }
 
-  async consume(processingCB: (message: KafkaMessage) => void | Promise<void>, maxRetries = 3) {
+  async consume(processingCB: (message: string | undefined) => void | Promise<void>, maxRetries = 3) {
     let retries = 0
 
     await this.consumer.run({
-      eachMessage: async ({ topic, partition, message }) => {
+      eachMessage: async ({ topic, message }) => {
         console.log(`Consume message from ${topic} topic`)
         let success = false
 
         while (retries < maxRetries && !success) {
           try {
-            const result = processingCB(message)
+            const result = processingCB(message.value?.toString())
 
             if (result instanceof Promise) {
               await result
