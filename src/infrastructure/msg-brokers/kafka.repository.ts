@@ -1,6 +1,6 @@
-import { Kafka, KafkaMessage } from "kafkajs";
-import { KAFKA_CLIENT_ID } from "../config/env";
+import { Kafka } from "kafkajs";
 import { IMsgConsumer, IMsgProducer } from "@/infrastructure/msg-brokers/interface";
+import { KAFKA_CLIENT_ID } from "@/shared/config/env";
 
 
 // kafka class with static method for connect kafka client
@@ -32,6 +32,7 @@ export class KafkaProducer implements IMsgProducer {
           }
         ]
       })
+      console.log(`Producer send message to ${topic} topic`)
     } catch (e: any) {
       console.error('Failed to write a message', e)
     }
@@ -39,6 +40,7 @@ export class KafkaProducer implements IMsgProducer {
 
   async disconnect() {
     await this.producer.disconnect()
+    console.info('Kafka producer disconnected')
   }
 }
 
@@ -64,11 +66,15 @@ export class KafkaConsumer implements IMsgConsumer {
     console.info(`Consumer subscribe ${topic}`)
   }
 
-  async consume(processingCB: (message: string | undefined) => void | Promise<void>, maxRetries = 3) {
+  async consumeMsg(processingCB: (messageValue: string) => void | Promise<void>, maxRetries = 3) {
     let retries = 0
 
     await this.consumer.run({
       eachMessage: async ({ topic, message }) => {
+        if (!message.value) {
+          console.trace('Invalid kafka message value')
+          return
+        }
         console.log(`Consume message from ${topic} topic`)
         let success = false
 

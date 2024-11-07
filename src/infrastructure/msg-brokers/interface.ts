@@ -7,6 +7,6 @@ export interface IMsgProducer {
 export interface IMsgConsumer {
   connect(): Promise<void>
   subscribe(topic: string): Promise<void>
-  consume(processingCB: (message: string | undefined) => void | Promise<void>, maxRetries: number): Promise<void>
+  consumeMsg(processingCB: (messageValue: string) => void | Promise<void>, maxRetries: number): Promise<void>
   disconnect(): Promise<void>
 }

@@ -12,7 +12,6 @@ interface IUser {
   _isActive: boolean
 }
 
-
 export class UserMongoDb implements Database {
   private getUserCollection() {
     try {
