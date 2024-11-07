@@ -12,6 +12,7 @@ import { LOG_LEVEL, NODE_ENV } from '@/shared/config/env';
 
 import StatusCodes from '@/shared/utils/statusCode';
 import MongoDb from './shared/utils/mongoDb';
+import { MsgConsumer, MsgProducer } from './infrastructure/msg-brokers/msg-broker.repository';
 
 
 const app = express();
@@ -23,6 +24,12 @@ app.use(logger(LOG_LEVEL));
 async function startServer() {
   try {
     await MongoDb.connect()
+
+    const producer = new MsgProducer()
+    await producer.connect()
+
+    const consumer = new MsgConsumer()
+    await consumer.connect()
 
     app.get(`/health-check`, (_req, res) => {
       res.status(StatusCodes.OK).json({

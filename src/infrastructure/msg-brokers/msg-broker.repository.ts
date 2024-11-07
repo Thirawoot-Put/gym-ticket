@@ -4,7 +4,7 @@ import { KAFKA_CLIENT_ID } from "@/shared/config/env";
 
 
 // kafka class with static method for connect kafka client
-export class KafkaProducer implements IMsgProducer {
+export class MsgProducer implements IMsgProducer {
   private kafka = new Kafka({
     clientId: KAFKA_CLIENT_ID,
     brokers: ['localhost:9192', 'localhost:9193']
@@ -21,14 +21,14 @@ export class KafkaProducer implements IMsgProducer {
     }
   }
 
-  async send(topic: string, message: string) {
+  async send(topic: string, messageValue: any) {
     try {
       await this.producer.send({
         topic,
         messages: [
           {
             //key: '' // ---> access some key from function
-            value: message
+            value: JSON.stringify(messageValue)
           }
         ]
       })
@@ -44,10 +44,10 @@ export class KafkaProducer implements IMsgProducer {
   }
 }
 
-export class KafkaConsumer implements IMsgConsumer {
+export class MsgConsumer implements IMsgConsumer {
   private kafka = new Kafka({
     clientId: KAFKA_CLIENT_ID,
-    brokers: ['localhost:9192', 'localhost:9193']
+    brokers: ['localhost:9092', 'localhost:9093']
   })
 
   public consumer = this.kafka.consumer({ groupId: KAFKA_CLIENT_ID })
@@ -55,18 +55,18 @@ export class KafkaConsumer implements IMsgConsumer {
   async connect() {
     try {
       await this.consumer.connect()
-      console.info('Kafka consumer connecting')
+      console.info('Kafka consumer connecting success')
     } catch (e: any) {
       console.error('Failed to connect kafka consumer', e)
     }
   }
 
   async subscribe(topic: string) {
-    await this.consumer.subscribe({ topic: topic })
+    await this.consumer.subscribe({ topic: topic, fromBeginning: true })
     console.info(`Consumer subscribe ${topic}`)
   }
 
-  async consumeMsg(processingCB: (messageValue: string) => void | Promise<void>, maxRetries = 3) {
+  async consumeMsg(processingCB: (messageValue: Buffer) => void | Promise<void>, maxRetries = 3) {
     let retries = 0
 
     await this.consumer.run({
@@ -80,7 +80,7 @@ export class KafkaConsumer implements IMsgConsumer {
 
         while (retries < maxRetries && !success) {
           try {
-            const result = processingCB(message.value?.toString())
+            const result = processingCB(message.value)
 
             if (result instanceof Promise) {
               await result

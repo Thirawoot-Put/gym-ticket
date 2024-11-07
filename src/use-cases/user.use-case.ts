@@ -1,4 +1,6 @@
 import { UserRepository } from "@/domain/interfaces/user-repository";
+import { MsgProducer } from "@/infrastructure/msg-brokers/msg-broker.repository";
+import { TOPIC_USER_SAY_HI } from "@/shared/config/env";
 import { UserCreate, UserResponse, UserUpdate } from "@/shared/dto/user.dto";
 import Mapper from "@/shared/utils/modelMapper";
 
@@ -56,5 +58,16 @@ export class UserUseCase {
     const deletedUser = await this.userRepository.delete(id)
 
     return mapper.mapObjToCls(UserResponse, deletedUser)
+  }
+
+  async userSendMsg(id: string) {
+    const msgProducer = new MsgProducer()
+    await msgProducer.connect()
+
+    const foundUser = await this.userRepository.findById(id)
+
+    const msgValue = { fromUser: foundUser.id, msg: `say hello from ${foundUser.userName}` }
+
+    await msgProducer.send(TOPIC_USER_SAY_HI, msgValue)
   }
 }
