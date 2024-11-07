@@ -1,6 +1,6 @@
 import { UserRepository } from "@/domain/interfaces/user-repository";
 import { MsgProducer } from "@/infrastructure/msg-brokers/msg-broker.repository";
-import { TOPIC_USER_SAY_HI } from "@/shared/config/env";
+import { TOPIC_USER_SAY_HI, TOPIC_USER_SAY_HI_2 } from "@/shared/config/env";
 import { UserCreate, UserResponse, UserUpdate } from "@/shared/dto/user.dto";
 import Mapper from "@/shared/utils/modelMapper";
 
@@ -69,6 +69,6 @@ export class UserUseCase {
     const msgValue = { fromUser: foundUser.id, msg: `say hello from ${foundUser.userName}` }
 
     await msgProducer.connect()
-    await msgProducer.send(TOPIC_USER_SAY_HI, msgValue)
+    await msgProducer.send(TOPIC_USER_SAY_HI_2, msgValue)
   }
 }

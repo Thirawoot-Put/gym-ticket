@@ -1,13 +1,13 @@
 import { Kafka } from "kafkajs";
 import { IMsgConsumer, IMsgProducer } from "@/infrastructure/msg-brokers/interface";
-import { KAFKA_CLIENT_ID } from "@/shared/config/env";
+import { KAFKA_BROKER_1, KAFKA_BROKER_2, KAFKA_CLIENT_ID } from "@/shared/config/env";
 
 
 // kafka class with static method for connect kafka client
 export class MsgProducer implements IMsgProducer {
   private kafka = new Kafka({
     clientId: KAFKA_CLIENT_ID,
-    brokers: ['localhost:9092', 'localhost:9093']
+    brokers: [KAFKA_BROKER_1, KAFKA_BROKER_2]
   })
 
   public producer = this.kafka.producer()
@@ -17,7 +17,7 @@ export class MsgProducer implements IMsgProducer {
       await this.producer.connect()
       console.info("*Kafka producer connecting success*")
     } catch (e) {
-      console.error("Failed to connect kafka producer", e)
+      console.error("Failed to connect kafka producer:", e)
     }
   }
 
@@ -34,7 +34,7 @@ export class MsgProducer implements IMsgProducer {
       })
       console.log(`--> Producer send message to ${topic} topic`)
     } catch (e: any) {
-      console.error('Failed to write a message', e)
+      console.error('Failed to write a message:', e)
     }
   }
 
@@ -47,7 +47,7 @@ export class MsgProducer implements IMsgProducer {
 export class MsgConsumer implements IMsgConsumer {
   private kafka = new Kafka({
     clientId: KAFKA_CLIENT_ID,
-    brokers: ['localhost:9092', 'localhost:9093']
+    brokers: [KAFKA_BROKER_1, KAFKA_BROKER_2]
   })
 
   public consumer = this.kafka.consumer({ groupId: KAFKA_CLIENT_ID })
@@ -57,13 +57,13 @@ export class MsgConsumer implements IMsgConsumer {
       await this.consumer.connect()
       console.info('<Kafka consumer connecting success>')
     } catch (e: any) {
-      console.error('Failed to connect kafka consumer', e)
+      console.error('Failed to connect kafka consumer:', e)
     }
   }
 
-  async subscribe(topic: string) {
-    await this.consumer.subscribe({ topics: [topic], fromBeginning: true })
-    console.info(`Consumer subscribe ${topic}`)
+  async subscribe(...topics: Array<string>) {
+    await this.consumer.subscribe({ topics: topics, fromBeginning: true })
+    console.info(`Consumer subscribe ${topics}`)
   }
 
   async consumeMsg(processingCB: (messageValue: string) => void | Promise<void>, maxRetries = 3) {
@@ -81,6 +81,7 @@ export class MsgConsumer implements IMsgConsumer {
         while (retries < maxRetries && !success) {
           try {
             const result = processingCB(message.value.toString())
+            // must JSON.parse parameter in processingCB function
 
             if (result instanceof Promise) {
               await result
@@ -89,7 +90,7 @@ export class MsgConsumer implements IMsgConsumer {
             success = true
           } catch (e) {
             retries++
-            console.error(`Error to process message ${retries} round:`, e)
+            console.error(`Error to process message at round ${retries}:`, e)
 
             if (retries >= maxRetries) {
               console.error('Send to DLQ(Dead letter queue) consumer')

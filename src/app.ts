@@ -8,11 +8,11 @@ import userRouter from '@/interface/routes/user.route'
 
 import ExceptionHandler from '@/shared/middlewares/exception';
 
-import { LOG_LEVEL, NODE_ENV, TOPIC_USER_SAY_HI } from '@/shared/config/env';
+import { LOG_LEVEL, NODE_ENV, TOPIC_USER_SAY_HI, TOPIC_USER_SAY_HI_2 } from '@/shared/config/env';
 
 import StatusCodes from '@/shared/utils/statusCode';
 import MongoDb from './shared/utils/mongoDb';
-import { MsgConsumer, MsgProducer } from './infrastructure/msg-brokers/msg-broker.repository';
+import { MsgConsumer } from './infrastructure/msg-brokers/msg-broker.repository';
 
 
 const app = express();
@@ -42,8 +42,9 @@ async function startServer() {
     app.use(ExceptionHandler.notFound);
     app.use(ExceptionHandler.serverError);
 
-    await consumer.subscribe(TOPIC_USER_SAY_HI)
+    await consumer.subscribe(TOPIC_USER_SAY_HI, TOPIC_USER_SAY_HI_2)
     await consumer.consumeMsg((msgValue) => {
+      //throw new Error('test kafka message error')
       console.log(JSON.parse(msgValue))
     })
 

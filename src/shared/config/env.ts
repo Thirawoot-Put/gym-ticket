@@ -15,5 +15,8 @@ export const LOG_LEVEL = process.env.LOG_LEVEL as string
 
 export const KAFKA_CLIENT_ID = process.env.KAFKA_CLIENT_ID as string
 
-export const TOPIC_USER_SAY_HI = process.env.TOPIC_USER_SAY_HI as string
+export const KAFKA_BROKER_1 = process.env.KAFKA_BROKER_1 as string
+export const KAFKA_BROKER_2 = process.env.KAFKA_BROKER_2 as string
 
+export const TOPIC_USER_SAY_HI = process.env.TOPIC_USER_SAY_HI as string
+export const TOPIC_USER_SAY_HI_2 = process.env.TOPIC_USER_SAY_HI_2 as string
