@@ -62,7 +62,6 @@ export class UserUseCase {
 
   async userSendMsg(id: string) {
     const msgProducer = new MsgProducer()
-    await msgProducer.connect()
 
     const foundUser = await this.userRepository.findById(id)
 
