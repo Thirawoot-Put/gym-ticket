@@ -8,7 +8,7 @@ import userRouter from '@/interface/routes/user.route'
 
 import ExceptionHandler from '@/shared/middlewares/exception';
 
-import { LOG_LEVEL, NODE_ENV } from '@/shared/config/env';
+import { LOG_LEVEL, NODE_ENV, TOPIC_USER_SAY_HI } from '@/shared/config/env';
 
 import StatusCodes from '@/shared/utils/statusCode';
 import MongoDb from './shared/utils/mongoDb';
@@ -25,8 +25,8 @@ async function startServer() {
   try {
     await MongoDb.connect()
 
-    const producer = new MsgProducer()
-    await producer.connect()
+    //const producer = new MsgProducer()
+    //await producer.connect()
 
     const consumer = new MsgConsumer()
     await consumer.connect()
@@ -41,6 +41,12 @@ async function startServer() {
 
     app.use(ExceptionHandler.notFound);
     app.use(ExceptionHandler.serverError);
+
+    await consumer.subscribe(TOPIC_USER_SAY_HI)
+    await consumer.consumeMsg((msgValue) => {
+      console.log(JSON.parse(msgValue))
+    })
+
   } catch (e) {
     console.error(e)
   }

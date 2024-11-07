@@ -4,6 +4,7 @@ import { UserUseCase } from "@/use-cases/user.use-case";
 import { Router } from "express";
 import { UserController } from "../controllers/user.controller";
 import { UserMongoDb } from "@/infrastructure/database/mongoDb.repository";
+import { MsgConsumer } from "@/infrastructure/msg-brokers/msg-broker.repository";
 
 const router = Router()
 
@@ -17,7 +18,9 @@ router
   .post('/', userController.postNewUser.bind(userController))
   .patch('/', userController.patchUser.bind(userController))
 router
+  .get('/:id/say-hi', userController.userSayHi.bind(userController))
   .get('/:id', userController.getUserById.bind(userController))
   .delete('/:id', userController.deleteUser.bind(userController))
+
 
 export default router;

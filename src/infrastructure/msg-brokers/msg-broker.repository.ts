@@ -7,7 +7,7 @@ import { KAFKA_CLIENT_ID } from "@/shared/config/env";
 export class MsgProducer implements IMsgProducer {
   private kafka = new Kafka({
     clientId: KAFKA_CLIENT_ID,
-    brokers: ['localhost:9192', 'localhost:9193']
+    brokers: ['localhost:9092', 'localhost:9093']
   })
 
   public producer = this.kafka.producer()
@@ -15,7 +15,7 @@ export class MsgProducer implements IMsgProducer {
   async connect() {
     try {
       await this.producer.connect()
-      console.info("Kafka producer connecting success")
+      console.info("*Kafka producer connecting success*")
     } catch (e) {
       console.error("Failed to connect kafka producer", e)
     }
@@ -32,7 +32,7 @@ export class MsgProducer implements IMsgProducer {
           }
         ]
       })
-      console.log(`Producer send message to ${topic} topic`)
+      console.log(`--> Producer send message to ${topic} topic`)
     } catch (e: any) {
       console.error('Failed to write a message', e)
     }
@@ -55,18 +55,18 @@ export class MsgConsumer implements IMsgConsumer {
   async connect() {
     try {
       await this.consumer.connect()
-      console.info('Kafka consumer connecting success')
+      console.info('<Kafka consumer connecting success>')
     } catch (e: any) {
       console.error('Failed to connect kafka consumer', e)
     }
   }
 
   async subscribe(topic: string) {
-    await this.consumer.subscribe({ topic: topic, fromBeginning: true })
+    await this.consumer.subscribe({ topics: [topic], fromBeginning: true })
     console.info(`Consumer subscribe ${topic}`)
   }
 
-  async consumeMsg(processingCB: (messageValue: Buffer) => void | Promise<void>, maxRetries = 3) {
+  async consumeMsg(processingCB: (messageValue: string) => void | Promise<void>, maxRetries = 3) {
     let retries = 0
 
     await this.consumer.run({
@@ -80,7 +80,7 @@ export class MsgConsumer implements IMsgConsumer {
 
         while (retries < maxRetries && !success) {
           try {
-            const result = processingCB(message.value)
+            const result = processingCB(message.value.toString())
 
             if (result instanceof Promise) {
               await result

@@ -1,5 +1,5 @@
 @url = http://localhost:9091
-@userId = Cj7R-WiAarxuigrNon8vs
+@userId = t4-KBp4ma0yeqjIXE6FFS
 
 # @name CreateUser
 POST {{url}}/user
@@ -7,7 +7,7 @@ accept: application/json
 content-type: application/json
 
 {
-  "userName": "test2",
+  "userName": "test1",
   "password": "1234"
 }
 
@@ -34,6 +34,13 @@ content-type: application/json
 
 # @name SoftDeleteUser
 DELETE {{url}}/user/{{userId}}
+accept: application/json
+content-type: application/json
+
+### END
+
+# @name UserSayHi
+GET {{url}}/user/{{userId}}/say-hi
 accept: application/json
 content-type: application/json
 

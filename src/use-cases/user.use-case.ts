@@ -68,6 +68,7 @@ export class UserUseCase {
 
     const msgValue = { fromUser: foundUser.id, msg: `say hello from ${foundUser.userName}` }
 
+    await msgProducer.connect()
     await msgProducer.send(TOPIC_USER_SAY_HI, msgValue)
   }
 }

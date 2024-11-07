@@ -44,4 +44,13 @@ export class UserController {
       next(e)
     }
   }
+
+  async userSayHi(req: Request, res: Response, next: NextFunction) {
+    try {
+      await this.useCase.userSendMsg(req.params.id)
+      res.send('Message has heen sended')
+    } catch (e) {
+      next(e)
+    }
+  }
 }
