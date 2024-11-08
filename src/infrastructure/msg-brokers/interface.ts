@@ -1,4 +1,4 @@
-export type TOpts = {
+export interface IConsumerOpts {
   topic?: string;
   maxRetries: number;
 };

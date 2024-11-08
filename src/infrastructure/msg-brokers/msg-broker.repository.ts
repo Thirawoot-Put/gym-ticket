@@ -1,5 +1,5 @@
 import { Consumer, Kafka } from "kafkajs";
-import { IMsgConsumer, IMsgProducer, TOpts } from "@/infrastructure/msg-brokers/interface";
+import { IMsgConsumer, IMsgProducer, IConsumerOpts } from "@/infrastructure/msg-brokers/interface";
 import { KAFKA_BROKER_1, KAFKA_BROKER_2, KAFKA_CLIENT_ID } from "@/shared/config/env";
 
 
@@ -71,7 +71,7 @@ export class MsgConsumer implements IMsgConsumer {
 
   async consumeMsg(
     processingCB: (messageValue: string, topic?: string) => void | Promise<void>,
-    opts: TOpts = { maxRetries: 3 }
+    opts: IConsumerOpts = { maxRetries: 3 }
   ) {
     let retries = 0;
 
