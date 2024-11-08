@@ -14,7 +14,7 @@ export interface IMsgConsumer {
   subscribeForOneGroupIdFromBeginning(topic: string): Promise<void>;
   consumeMsg(
     processingCB: (messageValue: string) => void | Promise<void>,
-    opts?: TOpts
+    opts?: IConsumerOpts
   ): Promise<void>;
   disconnect(): Promise<void>;
 }

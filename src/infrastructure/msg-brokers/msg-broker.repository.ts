@@ -73,7 +73,6 @@ export class MsgConsumer implements IMsgConsumer {
     processingCB: (messageValue: string, topic?: string) => void | Promise<void>,
     opts: IConsumerOpts = { maxRetries: 3 }
   ) {
-    let retries = 0;
 
     await this.consumer.run({
       eachMessage: async ({ topic, message }) => {
@@ -82,6 +81,8 @@ export class MsgConsumer implements IMsgConsumer {
           return;
         }
         console.trace(`->Consume message from ${topic} topic.`);
+
+        let retries = 0;
         let success = false;
 
         while (retries < opts.maxRetries && !success) {
