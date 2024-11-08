@@ -8,7 +8,7 @@ import userRouter from '@/interface/routes/user.route'
 
 import ExceptionHandler from '@/shared/middlewares/exception';
 
-import { LOG_LEVEL, NODE_ENV, TOPIC_USER_SAY_HI, TOPIC_USER_SAY_HI_2 } from '@/shared/config/env';
+import { KAFKA_CLIENT_ID, LOG_LEVEL, NODE_ENV, TOPIC_USER_SAY_HI, TOPIC_USER_SAY_HI_2 } from '@/shared/config/env';
 
 import StatusCodes from '@/shared/utils/statusCode';
 import MongoDb from './shared/utils/mongoDb';
@@ -28,7 +28,7 @@ async function startServer() {
     //const producer = new MsgProducer()
     //await producer.connect()
 
-    const consumer = new MsgConsumer()
+    const consumer = new MsgConsumer(KAFKA_CLIENT_ID)
     await consumer.connect()
 
     app.get(`/health-check`, (_req, res) => {
@@ -42,7 +42,7 @@ async function startServer() {
     app.use(ExceptionHandler.notFound);
     app.use(ExceptionHandler.serverError);
 
-    await consumer.subscribe(TOPIC_USER_SAY_HI, TOPIC_USER_SAY_HI_2)
+    await consumer.subscribeForOneGroupIdFromBeginning(TOPIC_USER_SAY_HI)
     await consumer.consumeMsg((msgValue) => {
       //throw new Error('test kafka message error')
       console.log(JSON.parse(msgValue))
