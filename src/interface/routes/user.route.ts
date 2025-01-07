@@ -15,12 +15,12 @@ const userUseCase = new UserUseCase(userRepository)
 const userController = new UserController(userUseCase)
 
 router
-  .post('/', userController.postNewUser.bind(userController))
-  .patch('/', userController.patchUser.bind(userController))
+  .post('/', userController.postNewUser)
+  .patch('/', userController.patchUser)
 router
-  .get('/:id/say-hi', userController.userSayHi.bind(userController))
-  .get('/:id', userController.getUserById.bind(userController))
-  .delete('/:id', userController.deleteUser.bind(userController))
+  .get('/:id/say-hi', userController.userSayHi)
+  .get('/:id', userController.getUserById)
+  .delete('/:id', userController.deleteUser)
 
 
 export default router;

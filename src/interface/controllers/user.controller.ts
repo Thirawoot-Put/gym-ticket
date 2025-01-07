@@ -1,17 +1,16 @@
 import { NextFunction, Request, Response } from "express";
 
 import { UserUseCase } from "@/use-cases/user.use-case";
+import bindAll from "@/shared/utils/bindInstance";
 
 export class UserController {
-  useCase: UserUseCase
-
-  constructor(userUseCase: UserUseCase) {
-    this.useCase = userUseCase
+  constructor(private userUseCase: UserUseCase) {
+    bindAll(this)
   }
 
   async postNewUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = await this.useCase.createNewUser(req.body)
+      const user = await this.userUseCase.createNewUser(req.body)
       res.send(user)
     } catch (e: any) {
       next(e)
@@ -20,7 +19,7 @@ export class UserController {
 
   async getUserById(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = await this.useCase.findUserById(req.params.id)
+      const user = await this.userUseCase.findUserById(req.params.id)
       res.send(user)
     } catch (e: any) {
       next(e)
@@ -29,7 +28,7 @@ export class UserController {
 
   async patchUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = await this.useCase.updateUser(req.body)
+      const user = await this.userUseCase.updateUser(req.body)
       res.send(user)
     } catch (e: any) {
       next(e)
@@ -38,7 +37,7 @@ export class UserController {
 
   async deleteUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = await this.useCase.deleteUser(req.params.id)
+      const user = await this.userUseCase.deleteUser(req.params.id)
       res.send(user)
     } catch (e: any) {
       next(e)
@@ -47,7 +46,7 @@ export class UserController {
 
   async userSayHi(req: Request, res: Response, next: NextFunction) {
     try {
-      await this.useCase.userSendMsg(req.params.id)
+      await this.userUseCase.userSendMsg(req.params.id)
       res.send('Message has heen sended')
     } catch (e) {
       next(e)
